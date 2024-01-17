@@ -46,9 +46,9 @@ export default function Home() {
     hasMissed: false,
   }));
 
-  const [hitSoundPlay, { stop: hitSoundStop }] = useSound("/sounds/correct-choice.mp3");
-  const [lostSoundPlay, { stop: lostSoundStop }] = useSound("/sounds/failure-drum-sound-effect.mp3");
-  const [wonSoundPlay, { stop: wonSoundStop }] = useSound("/sounds/success-fanfare-trumpets.mp3");
+  const [hitSoundPlay, { stop: hitSoundStop }] = useSound("/arcade-game/sounds/correct-choice.mp3");
+  const [lostSoundPlay, { stop: lostSoundStop }] = useSound("/arcade-game/sounds/failure-drum-sound-effect.mp3");
+  const [wonSoundPlay, { stop: wonSoundStop }] = useSound("/arcade-game/sounds/success-fanfare-trumpets.mp3");
 
   const rotationIntervalRef = useRef<number | null>(null);
   const attemptToHitFuncRef = useRef<EventListener | null>(null);
