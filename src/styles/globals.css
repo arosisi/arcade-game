@@ -1,0 +1,17 @@
+.App {
+  font-family: "Nunito Sans";
+  text-align: center;
+}
+
+button {
+  background-color: #37b995;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
