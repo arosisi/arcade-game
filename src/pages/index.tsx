@@ -39,7 +39,12 @@ export default function Home() {
     rotationDegree: 0,
     rotationDirection: 1,
     rotationStepSize: constants.initialRotationStepSize,
-    positionDegree: generatePositionDegree(0),
+    /**
+     * Ideally should use generatePositionDegree(0) below but don't know how to handle
+     * multiple initial invocations which leads to the small circle and the game state
+     * logic using different initial values
+     */
+    positionDegree: 180,
     hitsLeftToWin: constants.hitsToWin,
     hasStickEntered: false,
     hasStickExited: false,
