@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import useSound from "use-sound";
+import { round, generatePositionDegree, didHit } from "@/utils/helpers";
 
 const constants = {
   innerCircleDiameter: 200,
@@ -11,45 +12,30 @@ const constants = {
   hitsToWin: 30,
 };
 
-const round = (num: number) => parseFloat(num.toFixed(3));
-
-const generatePositionDegree = (rotationDegree: number) => {
-  let availablePositionDegrees = new Array(360).fill("").map((_, i) => i);
-  const wholeRotationDegree = Math.floor(rotationDegree);
-  const bufferDegrees = 45;
-  for (let i = 0; i < bufferDegrees; i++) {
-    availablePositionDegrees = availablePositionDegrees.filter(
-      (positionDegree) =>
-        positionDegree !== (wholeRotationDegree - i + 360) % 360 &&
-        positionDegree !== (wholeRotationDegree + i + 360) % 360,
-    );
-  }
-  const newPositionDegree = availablePositionDegrees[Math.floor(Math.random() * availablePositionDegrees.length)];
-  return newPositionDegree;
-};
-
-const didHit = (rotationDegree: number, positionDegree: number) => {
-  const diff = Math.abs(((Math.floor(rotationDegree) + 360) % 360) - positionDegree);
-  return diff < 15 || 360 - diff < 15;
-};
-
 export default function Home() {
   const [hasStarted, setHasStarted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Generate position only on client side to avoid SSR mismatch
+  const initialPositionRef = useRef<number | null>(null);
+  if (initialPositionRef.current === null) {
+    initialPositionRef.current = generatePositionDegree(0);
+  }
+
   const [gameState, setGameState] = useState(() => ({
     rotationDegree: 0,
     rotationDirection: 1,
     rotationStepSize: constants.initialRotationStepSize,
-    /**
-     * Ideally should use generatePositionDegree(0) below but don't know how to handle
-     * multiple initial invocations which leads to the small circle and the game state
-     * logic using different initial values
-     */
-    positionDegree: 180,
+    positionDegree: initialPositionRef.current,
     hitsLeftToWin: constants.hitsToWin,
     hasStickEntered: false,
     hasStickExited: false,
     hasMissed: false,
   }));
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const [hitSoundPlay, { stop: hitSoundStop }] = useSound("/arcade-game/sounds/correct-choice.mp3");
   const [lostSoundPlay, { stop: lostSoundStop }] = useSound("/arcade-game/sounds/failure-drum-sound-effect.mp3");
@@ -204,6 +190,11 @@ export default function Home() {
     setRotationInterval();
     setAttemptToHitFunc();
   };
+
+  // Prevent hydration mismatch by not rendering until client-side mounted
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div className="App">
