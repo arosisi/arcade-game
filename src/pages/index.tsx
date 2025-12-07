@@ -62,8 +62,8 @@ export default function Home() {
           hasStickExited,
           ...rest
         }) => {
-          const newHasStickEntered = didHit(rotationDegree, positionDegree);
-          const newHasStickExited = hasStickEntered && !didHit(rotationDegree, positionDegree);
+          const newHasStickEntered = didHit(rotationDegree, positionDegree!);
+          const newHasStickExited = hasStickEntered && !didHit(rotationDegree, positionDegree!);
           if (!newHasStickEntered && newHasStickExited) {
             stopAllSounds();
             lostSoundPlay();
@@ -99,7 +99,7 @@ export default function Home() {
           hasMissed,
           ...rest
         }) => {
-          if (didHit(rotationDegree, positionDegree)) {
+          if (didHit(rotationDegree, positionDegree!)) {
             stopAllSounds();
             hitSoundPlay();
             return {
